@@ -24,16 +24,16 @@ def seed_powers():
 
 def seed_heroes():
     heroes_data = [
-        {"name": "Kamala Khan", "super_name": "Ms. Marvel"},
-        {"name": "Doreen Green", "super_name": "Squirrel Girl"},
-        {"name": "Gwen Stacy", "super_name": "Spider-Gwen"},
-        {"name": "Janet Van Dyne", "super_name": "The Wasp"},
-        {"name": "Wanda Maximoff", "super_name": "Scarlet Witch"},
-        {"name": "Carol Danvers", "super_name": "Captain Marvel"},
-        {"name": "Jean Grey", "super_name": "Dark Phoenix"},
-        {"name": "Ororo Munroe", "super_name": "Storm"},
-        {"name": "Kitty Pryde", "super_name": "Shadowcat"},
-        {"name": "Elektra Natchios", "super_name": "Elektra"}
+        {"name": "Kamala Khan"},
+        {"name": "Doreen Green"},
+        {"name": "Gwen Stacy"},
+        {"name": "Janet Van Dyne"},
+        {"name": "Wanda Maximoff"},
+        {"name": "Carol Danvers"},
+        {"name": "Jean Grey"},
+        {"name": "Ororo Munroe"},
+        {"name": "Kitty Pryde"},
+        {"name": "Elektra Natchios"}
     ]
 
     for data in heroes_data:
@@ -66,8 +66,8 @@ def seed():
         seed_heroes()
         seed_hero_powers()
         db.session.commit()
+        print("🦸‍♀️ Done seeding!")
 
 
 if __name__ == "__main__":
     seed()
-    print("🦸‍♀️ Done seeding!")
