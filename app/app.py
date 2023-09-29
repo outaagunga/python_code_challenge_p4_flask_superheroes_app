@@ -155,5 +155,11 @@ def create_hero_power():
     return jsonify(hero_data)
 
 
+@app.errorhandler(Exception)
+def handle_error(e):
+    app.logger.error(str(e))
+    return jsonify({"error": "Internal Server Error"}), 500
+
+
 if __name__ == "__main__":
     app.run(port=5555)
