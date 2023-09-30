@@ -1,7 +1,6 @@
 # app.py
 from flask import Flask, jsonify, request
 from flask_marshmallow import Marshmallow
-from flask_sqlalchemy import SQLAlchemy
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 from models import db, Hero, Power, HeroPower
 from flask_migrate import Migrate
@@ -17,7 +16,7 @@ migrate = Migrate(app, db)
 class HeroSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = Hero
-        include_relationships = True  # Include relationships in serialization
+        include_relationships = True
         load_instance = True
 
 
@@ -36,7 +35,8 @@ class HeroPowerSchema(SQLAlchemyAutoSchema):
 def home():
     return "Welcome to the Hero API"
 
-# Route to get all heroes
+
+# GET /heroes
 
 
 @app.route('/heroes', methods=['GET'])
@@ -49,7 +49,7 @@ def get_heroes():
     } for hero in heroes]
     return jsonify(heroes_list)
 
-# Route to get a hero by ID
+# GET /heroes/:id
 
 
 @app.route('/heroes/<int:id>', methods=['GET'])
@@ -71,7 +71,7 @@ def get_hero(id):
 
     return jsonify(hero_data)
 
-# Route to get all powers
+# GET /powers
 
 
 @app.route('/powers', methods=['GET'])
@@ -84,7 +84,7 @@ def get_powers():
     } for power in powers]
     return jsonify(powers_list)
 
-# Route to get a power by ID
+# GET /powers/:id
 
 
 @app.route('/powers/<int:id>', methods=['GET'])
@@ -99,7 +99,7 @@ def get_power(id):
     }
     return jsonify(power_data)
 
-# Route to update a power by ID
+# PATCH /powers/:id
 
 
 @app.route('/powers/<int:id>', methods=['PATCH'])
@@ -110,7 +110,7 @@ def update_power(id):
 
     data = request.get_json()
     if 'description' not in data or len(data['description']) < 20:
-        return jsonify({"errors": ["validation errors"]}), 400
+        return jsonify({"errors": ["Validation errors"]}), 400
 
     power.description = data['description']
     db.session.commit()
@@ -122,7 +122,7 @@ def update_power(id):
     }
     return jsonify(power_data)
 
-# Route to create a hero power relationship
+# POST /hero_powers
 
 
 @app.route('/hero_powers', methods=['POST'])
@@ -130,13 +130,13 @@ def create_hero_power():
     data = request.get_json()
     if 'strength' not in data or data['strength'] not in ['Strong', 'Weak', 'Average'] \
             or 'power_id' not in data or 'hero_id' not in data:
-        return jsonify({"errors": ["validation errors"]}), 400
+        return jsonify({"errors": ["Validation errors"]}), 400
 
     hero = Hero.query.get(data['hero_id'])
     power = Power.query.get(data['power_id'])
 
     if hero is None or power is None:
-        return jsonify({"errors": ["validation errors"]}), 400
+        return jsonify({"errors": ["Validation errors"]}), 400
 
     hero_power = HeroPower(hero=hero, power=power, strength=data['strength'])
     db.session.add(hero_power)
@@ -153,12 +153,6 @@ def create_hero_power():
         } for power in hero.powers]
     }
     return jsonify(hero_data)
-
-
-@app.errorhandler(Exception)
-def handle_error(e):
-    app.logger.error(str(e))
-    return jsonify({"error": "Internal Server Error"}), 500
 
 
 if __name__ == "__main__":
